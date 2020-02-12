@@ -1,10 +1,21 @@
-def roundSolver(A, B, C, D, message, key):
+def roundSolver(A, B, C, D, message, key, numShift):
     # bitwise or A and B
-    BandC = binAndOpe(A, B)
+    BandC = binAndOpe(B, C)
     comB = complement(B)
     comBandD = binAndOpe(comB, D)
     F = binOrOpe(BandC, comBandD)
-    tae = "tae"
+    temp = binAddOpe(A, F)
+    temp = binAddOpe(temp, message)
+    temp = binAddOpe(temp, key)
+    temp = shiftLeft(temp, numShift)
+    temp = binAddOpe(temp, B)
+
+    return D, temp, B, C
+
+
+def shiftLeft(a, numShift):
+    return a[numShift:] + a[:numShift]
+
 
 def complement(A):
     aComp = ""
@@ -14,10 +25,10 @@ def complement(A):
 
 
 def binAndOpe(A, B):
-    BandC = ""
-    for b, c in zip(B, B):
-        BandC = (BandC + "1") if b == "1" and c == "1" else (BandC + "0")
-    return BandC
+    AandB = ""
+    for a, b in zip(A, B):
+        AandB = (AandB + "1") if a == "1" and b == "1" else (AandB + "0")
+    return AandB
 
 
 def binOrOpe(A, B):
@@ -26,10 +37,31 @@ def binOrOpe(A, B):
         temp = temp + "1" if (a == "1" or b == "1") else temp + "0"
     return temp
 
+
 def binAddOpe(A, B):
     result = ""
-    for a, b in zip(A, B):
-        result = result + "1" if    
+    remainder = False
+    for a, b in zip(A[::-1], B[::-1]):
+        if a == "1" and b == "1" and remainder:
+            result += "1"
+            remainder = True
+        elif a == "1" and b == "1" and not remainder:
+            result += "0"
+            remainder = True
+        elif (a == "1" or b == "1") and remainder:
+            result += "0"
+            remainder = True
+        elif (a == "1" or b == "1") and not remainder:
+            result += "1"
+            remainder = False
+        elif remainder:
+            result += "1"
+            remainder = False
+        else:
+            result += "0"
+            remainder = False
+    return result[::-1]
+
 
 """  A = input("Enter value for A:")
     B = input("Enter value for B:")
@@ -39,16 +71,17 @@ def binAddOpe(A, B):
     key = input("Enter key:") 
  """
 
-#tae
-def main():
 
+def main():
     A = "10101011011100011101011010011011"
     B = "01010100010010100000110101010011"
     C = "10101010110010100101001101010010"
     D = "10101011011100011101011010011011"
     message = "10000000101010101010101010100101"
     key = "10001011010001001111011110101111"
-    roundSolver(A, B, C, D, message, key)
+    numShift = 12
+    A, B, C, D = roundSolver(A, B, C, D, message, key, numShift)
+    print(f"A = {A}\nB = {B}\nC = {C}\nD = {D}")
 
 
 main()
