@@ -4,7 +4,7 @@ def roundSolver(A, B, C, D, message, key):
     comB = complement(B)
     comBandD = binAndOpe(comB, D)
     F = binOrOpe(BandC, comBandD)
-
+    tae = "tae"
 
 def complement(A):
     aComp = ""
@@ -26,6 +26,10 @@ def binOrOpe(A, B):
         temp = temp + "1" if (a == "1" or b == "1") else temp + "0"
     return temp
 
+def binAddOpe(A, B):
+    result = ""
+    for a, b in zip(A, B):
+        result = result + "1" if    
 
 """  A = input("Enter value for A:")
     B = input("Enter value for B:")
