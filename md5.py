@@ -35,7 +35,7 @@ def binOrOpe(A, B):
     key = input("Enter key:") 
  """
 
-
+#tae
 def main():
 
     A = "10101011011100011101011010011011"
